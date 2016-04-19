@@ -68,7 +68,7 @@ public class MyGLRenderer implements GLSurfaceView.Renderer {
 
         gl.glFrontFace(GL10.GL_CCW);
         gl.glEnable(GL10.GL_CULL_FACE);
-        gl.glCullFace(GL10.GL_LESS);
+        gl.glCullFace(GL10.GL_LEQUAL);
         gl.glEnable(GL10.GL_DEPTH_TEST);
         gl.glDepthFunc(GL10.GL_LESS);
         gl.glEnable(GL10.GL_NORMALIZE);

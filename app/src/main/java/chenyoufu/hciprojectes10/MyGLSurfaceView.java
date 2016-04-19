@@ -16,6 +16,9 @@
 package chenyoufu.hciprojectes10;
 
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
 import android.opengl.GLSurfaceView;
 import android.support.v4.view.MotionEventCompat;
 import android.view.MotionEvent;
@@ -345,9 +348,8 @@ public class MyGLSurfaceView extends GLSurfaceView {
         }
     }
 
-    float xOri = -1;
-    float yOri = -1;
-    float moveFactor = 1000f;
+    private float xOri = -1;
+    private float yOri = -1;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -355,8 +357,13 @@ public class MyGLSurfaceView extends GLSurfaceView {
         int action = MotionEventCompat.getActionMasked(event);
         int index = MotionEventCompat.getActionIndex(event);
 
-        if (event.getPointerCount() > 1)
+        if (event.getPointerCount() > 1) {
+            if(action==MotionEvent.ACTION_POINTER_UP && event.getPointerCount()==2){
+                xOri = MotionEventCompat.getX(event,1-index);
+                yOri = MotionEventCompat.getY(event,1-index);
+            }
             mScaleDetector.onTouchEvent(event);
+        }
         else {
             switch (action){
                 case MotionEvent.ACTION_DOWN:
@@ -368,10 +375,10 @@ public class MyGLSurfaceView extends GLSurfaceView {
                     float xNow = MotionEventCompat.getX(event,index);
                     float yNow = MotionEventCompat.getY(event,index);
 
-                    float[] xMove = Global.fArrayMul(Global.getCamCrossProductNV(),(xOri-xNow)/moveFactor);
+                    float[] xMove = Global.fArrayMul(Global.getCamCrossProductNV(),(xOri-xNow)/Global.moveFactor);
                     Global.cameraEye=Global.fArrayAdd(Global.cameraEye,xMove);
                     Global.cameraCentre=Global.fArrayAdd(Global.cameraCentre,xMove);
-                    float[] yMove = Global.fArrayMul(Global.cameraUp,(yNow-yOri)/moveFactor);
+                    float[] yMove = Global.fArrayMul(Global.cameraUp,(yNow-yOri)/Global.moveFactor);
                     Global.cameraEye=Global.fArrayAdd(Global.cameraEye,yMove);
                     Global.cameraCentre=Global.fArrayAdd(Global.cameraCentre,yMove);
                     xOri=xNow;
